@@ -1,0 +1,79 @@
+package Data;
+import java.awt.event.*;
+import javax.swing.*;
+import java.sql.*;
+/*
+<APPLET code=Cricket height=500 width=500>
+</APPLET> 
+*/
+public class Cricket extends JFrame implements ActionListener 
+{
+	JButton b1,b2;
+	JLabel l1,l2;
+	JTextField tf1,tf2;
+	JTextArea ta;
+		
+	public void init()
+	{
+		setLayout(null);
+		b1=new JButton("Add");
+		b2=new JButton("Reset");
+		
+		l1=new JLabel("Name:",JLabel.LEFT);
+		l2=new JLabel("Runs:",JLabel.LEFT);
+		tf1=new JTextField(20);
+		tf2=new JTextField(20);
+		
+		l1.setBounds(80,20,100,20);
+		add(l1);
+		tf1.setBounds(130,20,150,30);
+		add(tf1);
+		
+		l2.setBounds(80,40,100,50);
+		add(l2);
+		tf2.setBounds(130,50,150,30);
+		add(tf2);
+		
+		b1.setBounds(100,140,90,40);
+		add(b1);
+		b1.addActionListener(this);
+		b2.setBounds(200,140,90,40);
+		add(b2);
+		b2.addActionListener(this);
+		
+		setSize(400,300);
+		setVisible(true);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	String name;
+	int runs;
+	public void actionPerformed(ActionEvent ae)
+	{
+		if(ae.getActionCommand().equals("Add"))
+		{
+			name=tf1.getText();
+			runs=Integer.parseInt(tf2.getText());			
+			try {
+			Connection myConn = DriverManager.getConnection("jdbc:mysql://localhost:3306/world", "root", "toor");
+			Statement myStat= myConn.createStatement();
+			String sql= "insert into cricket"
+					+"(Name, Runs)"
+					+"values('"+name+"','"+runs+"')";
+			myStat.executeUpdate(sql);
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+		}	
+		else if(ae.getActionCommand().equals("Reset"))
+		{
+			tf1.setText("");
+			tf2.setText("");
+		}
+	}	
+	public static void main(String a[])
+	{
+		Cricket c=new Cricket();
+		c.init();
+	}
+}
